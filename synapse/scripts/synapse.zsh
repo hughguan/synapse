@@ -89,7 +89,11 @@ remove() {
     restore_file ".tmux.conf" ".tmux.conf"
     restore_file "init.lua" ".config/nvim/init.lua"
 
-    echo "✨ Synapse removed and original files restored."
+    # Cleanup backup folders
+    echo "🧹 Cleaning up backup directories..."
+    rm -rf ${BACKUP_DIR_BASE}_*
+
+    echo "✨ Synapse removed, original files restored, and backups cleaned."
 }
 
 # Parse arguments
