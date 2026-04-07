@@ -25,8 +25,9 @@ zsh scripts/synapse.zsh --remove
 
 ### 3. Key Features
 - **OS Layer:** Tmux configuration with C-x prefix and navigation bindings.
-- **Human Native:** Neovim setup powered by kickstart.nvim and obsidian.nvim.
-- **Backups:** Automatic timestamped backups of your original config files.
+- **Human Native:** Full Neovim configuration (mirroring `dot/.config/nvim/`) powered by kickstart.nvim and obsidian.nvim.
+- **Full Recursion:** Automatically links all files/directories found in the `dot/` folder (including hidden ones).
+- **Backups:** Automatic timestamped backups of your original config files and directories.
 - **Verification:** Headless plugin synchronization for Neovim (Lazy.nvim).
 
 ## Troubleshooting

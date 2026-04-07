@@ -27,8 +27,8 @@ jobs:
       - name: Run Synapse Setup
         shell: zsh {0}
         run: |
-          chmod +x synapse/scripts/synapse.zsh
-          ./synapse/scripts/synapse.zsh --setup
+          chmod +x skills/synapse/scripts/synapse.zsh
+          ./skills/synapse/scripts/synapse.zsh --setup
 
       - name: Verify Setup Symlinks
         run: |
@@ -43,7 +43,7 @@ jobs:
       - name: Run Synapse Remove
         shell: zsh {0}
         run: |
-          ./synapse/scripts/synapse.zsh --remove
+          ./skills/synapse/scripts/synapse.zsh --remove
 
       - name: Verify Restoration
         run: |
