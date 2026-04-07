@@ -1,9 +1,9 @@
-name: Synapse Setup Validation
+name: Synapse Lifecycle Validation
 
 on: [push, pull_request]
 
 jobs:
-  test-setup:
+  test-lifecycle:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,31 +17,42 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y neovim
 
-      - name: Run Synapse setup script
+      - name: Create Dummy Original Files
+        run: |
+          echo "DUMMY_GIT" > "$HOME/.gitconfig"
+          echo "DUMMY_TMUX" > "$HOME/.tmux.conf"
+          mkdir -p "$HOME/.config/nvim"
+          echo "DUMMY_NVIM" > "$HOME/.config/nvim/init.lua"
+
+      - name: Run Synapse Setup
         shell: zsh {0}
         run: |
           chmod +x synapse/scripts/synapse.zsh
           ./synapse/scripts/synapse.zsh --setup
 
-      - name: Verify Tmux Symlink
+      - name: Verify Setup Symlinks
         run: |
-          if [ -L "$HOME/.tmux.conf" ]; then
-            echo "✅ Tmux symlink created successfully"
-          else
-            echo "❌ Tmux symlink missing"
-            exit 1
-          fi
-
-      - name: Verify Neovim Symlink
-        run: |
-          if [ -L "$HOME/.config/nvim/init.lua" ]; then
-            echo "✅ Neovim symlink created successfully"
-          else
-            echo "❌ Neovim symlink missing"
-            exit 1
-          fi
+          [ -L "$HOME/.gitconfig" ] && echo "✅ Git symlink OK"
+          [ -L "$HOME/.tmux.conf" ] && echo "✅ Tmux symlink OK"
+          [ -L "$HOME/.config/nvim/init.lua" ] && echo "✅ Neovim symlink OK"
 
       - name: Headless Neovim Check
         run: |
-          # Ensure Neovim can start and exit without configuration errors
           nvim --headless +qa && echo "✅ Neovim configuration is valid"
+
+      - name: Run Synapse Remove
+        shell: zsh {0}
+        run: |
+          ./synapse/scripts/synapse.zsh --remove
+
+      - name: Verify Restoration
+        run: |
+          # 1. Ensure symlinks are gone
+          [ ! -L "$HOME/.gitconfig" ] || (echo "❌ Git symlink still exists" && exit 1)
+          [ ! -L "$HOME/.tmux.conf" ] || (echo "❌ Tmux symlink still exists" && exit 1)
+          [ ! -L "$HOME/.config/nvim/init.lua" ] || (echo "❌ Neovim symlink still exists" && exit 1)
+
+          # 2. Ensure dummy content is back
+          grep -q "DUMMY_GIT" "$HOME/.gitconfig" && echo "✅ Git restored OK"
+          grep -q "DUMMY_TMUX" "$HOME/.tmux.conf" && echo "✅ Tmux restored OK"
+          grep -q "DUMMY_NVIM" "$HOME/.config/nvim/init.lua" && echo "✅ Neovim restored OK"
