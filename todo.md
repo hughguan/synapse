@@ -1,17 +1,18 @@
 # Synapse Execution Plan: 7-Day Implementation Roadmap
 
-## Day 1: Foundation & The "Synapse Setup" Skill
-- [ ] **Environment Check:** Verify core dependencies (`zsh`, `tmux`, `nvim 0.10+`, `node`, `npm`).
-- [ ] **Docker Validation:** Run `docker build -f Dockerfile.test -t synapse-test .` to verify the setup script and Neovim config in a clean environment.
-- [ ] **Skill Creation:** Initialize the `synapse-setup` Gemini CLI skill.
-- [ ] **Scripting:** Finalize `synapse.zsh` and bundle it into the skill's `scripts/` directory.
-- [ ] **Initial Deployment:** Use `gemini skills install` to load the setup skill and run it to symlink dotfiles.
-- [ ] **Verification:** Confirm Tmux starts with `prefix C-x` and Neovim loads `init.lua` without errors.
+## ✅ Day 1: Foundation & The "Synapse" Lifecycle Skill
+- [x] **Environment Check:** Verify core dependencies (`zsh`, `tmux`, `nvim 0.10+`, `node`, `npm`).
+- [x] **Docker Validation:** Run `docker build -f Dockerfile.test -t synapse-test .` to verify the setup script and Neovim config in a clean environment.
+- [x] **Skill Creation:** Initialize and refine the `synapse` Gemini CLI skill (Setup + Remove).
+- [x] **Scripting:** Finalize `synapse.zsh` with "Override Mode" and recursive directory support.
+- [x] **Initial Deployment:** Use `gemini skills install` to load the skill and automate dotfile deployment.
+- [x] **Verification:** Confirm Tmux starts with `prefix C-x` and Neovim loads full `kickstart.nvim` config without errors.
 
 ## Day 2: Human Native Interface (Neovim & Flow)
-- [ ] **Kickstart Optimization:** Refine `init.lua` with specific LSP servers (`rust_analyzer`, `lua_ls`, `pyright`).
-- [ ] **Navigation:** Verify `vim-tmux-navigator` works seamlessly between Tmux panes and Nvim splits.
-- [ ] **Aesthetics:** Configure `tokyonight` theme and ensure Nerd Fonts are rendering correctly in the terminal.
+- [x] **Kickstart Integration:** Deployed full `kickstart.nvim` structure (lua/, doc/, .stylua.toml).
+- [ ] **LSP Optimization:** Refine `init.lua` with specific LSP servers (`rust_analyzer`, `lua_ls`, `pyright`).
+- [x] **Navigation:** `vim-tmux-navigator` is active between Tmux panes and Nvim splits.
+- [x] **Aesthetics:** `tokyonight` theme and Nerd Font icons are configured.
 - [ ] **Flow Test:** Practice the "Code -> Split -> Terminal" cycle within the new environment.
 
 ## Day 3: The Knowledge Junction (Obsidian)
@@ -32,8 +33,9 @@
 - [ ] **Detachment Test:** Verify agents continue running in Tmux sessions after detaching the terminal.
 
 ## Day 6: Automation & Execution Pipeline (CI/CD)
+- [x] **GitHub Actions:** Automated lifecycle validation (Setup/Remove/Restore) is live.
 - [ ] **Git Hooks:** Implement a `pre-commit` hook that uses Gemini CLI to check for secrets and linting.
-- [ ] **Distribution Flow:** Configure N8N to trigger content distribution (e.g., sending a summary of today's vault changes to a newsletter).
+- [ ] **Distribution Flow:** Configure N8N to trigger content distribution.
 - [ ] **Rendering:** Setup `Hugo` or `Slidev` to transform markdown notes into a static site or presentation.
 
 ## Day 7: Stress Test & Calibration
