@@ -34,7 +34,8 @@ jobs:
         run: |
           [ -L "$HOME/.gitconfig" ] && echo "✅ Git symlink OK"
           [ -L "$HOME/.tmux.conf" ] && echo "✅ Tmux symlink OK"
-          [ -L "$HOME/.config/nvim/init.lua" ] && echo "✅ Neovim symlink OK"
+          [ -L "$HOME/.config/nvim" ] && echo "✅ Neovim directory symlink OK"
+          [ -f "$HOME/.config/nvim/init.lua" ] && echo "✅ init.lua exists OK"
 
       - name: Headless Neovim Check
         run: |
@@ -50,7 +51,7 @@ jobs:
           # 1. Ensure symlinks are gone
           [ ! -L "$HOME/.gitconfig" ] || (echo "❌ Git symlink still exists" && exit 1)
           [ ! -L "$HOME/.tmux.conf" ] || (echo "❌ Tmux symlink still exists" && exit 1)
-          [ ! -L "$HOME/.config/nvim/init.lua" ] || (echo "❌ Neovim symlink still exists" && exit 1)
+          [ ! -L "$HOME/.config/nvim" ] || (echo "❌ Neovim directory symlink still exists" && exit 1)
 
           # 2. Ensure dummy content is back
           grep -q "DUMMY_GIT" "$HOME/.gitconfig" && echo "✅ Git restored OK"
