@@ -1,0 +1,12 @@
+# This is Git's per-user configuration file.
+[user]
+	name = Hugh Guan
+	email = hughguan@gmail.com
+[alias]
+	ci = commit
+	co = checkout
+	cp = cherry-pick
+	st = status
+	br = branch
+	df = diff
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
