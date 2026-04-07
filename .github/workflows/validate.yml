@@ -1,0 +1,47 @@
+name: Synapse Setup Validation
+
+on: [push, pull_request]
+
+jobs:
+  test-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install core dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zsh tmux software-properties-common
+          sudo add-apt-repository ppa:neovim-ppa/stable -y
+          sudo apt-get update
+          sudo apt-get install -y neovim
+
+      - name: Run Synapse setup script
+        shell: zsh {0}
+        run: |
+          chmod +x synapse.zsh
+          ./synapse.zsh
+
+      - name: Verify Tmux Symlink
+        run: |
+          if [ -L "$HOME/.tmux.conf" ]; then
+            echo "✅ Tmux symlink created successfully"
+          else
+            echo "❌ Tmux symlink missing"
+            exit 1
+          fi
+
+      - name: Verify Neovim Symlink
+        run: |
+          if [ -L "$HOME/.config/nvim/init.lua" ]; then
+            echo "✅ Neovim symlink created successfully"
+          else
+            echo "❌ Neovim symlink missing"
+            exit 1
+          fi
+
+      - name: Headless Neovim Check
+        run: |
+          # Ensure Neovim can start and exit without configuration errors
+          nvim --headless +qa && echo "✅ Neovim configuration is valid"

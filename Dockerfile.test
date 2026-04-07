@@ -1,0 +1,27 @@
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    zsh tmux git curl nodejs npm \
+    software-properties-common \
+    && add-apt-repository ppa:neovim-ppa/stable -y \
+    && apt-get update && apt-get install -y neovim
+
+# Setup Synapse
+WORKDIR /synapse-repo
+COPY . .
+
+# Run setup as if we are in $HOME
+WORKDIR /root
+RUN zsh /synapse-repo/synapse.zsh
+
+# Validation tests
+RUN ls -la ~/.tmux.conf | grep "\-> /synapse-repo/dot/.tmux.conf" && echo "✅ Tmux symlink verified"
+RUN ls -la ~/.config/nvim/init.lua | grep "\-> /synapse-repo/dot/.config/nvim/init.lua" && echo "✅ Neovim symlink verified"
+
+# Check if Neovim can start and exit without error
+RUN nvim --headless +qa && echo "✅ Neovim configuration loaded successfully"
+
+CMD ["zsh"]
