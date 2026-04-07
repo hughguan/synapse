@@ -6,7 +6,7 @@ set -e
 
 # Find the project root
 SCRIPT_DIR="${0:A:h}"
-PROJECT_ROOT=$(cd "$SCRIPT_DIR/../.." && pwd)
+PROJECT_ROOT=$(cd "$SCRIPT_DIR/../../.." && pwd)
 DOT_DIR="$PROJECT_ROOT/dot"
 BACKUP_DIR_BASE="$HOME/.synapse_backup"
 
