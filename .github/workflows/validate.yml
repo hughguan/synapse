@@ -20,8 +20,8 @@ jobs:
       - name: Run Synapse setup script
         shell: zsh {0}
         run: |
-          chmod +x synapse.zsh
-          ./synapse.zsh
+          chmod +x synapse/scripts/synapse.zsh
+          ./synapse/scripts/synapse.zsh --setup
 
       - name: Verify Tmux Symlink
         run: |
