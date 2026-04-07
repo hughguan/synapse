@@ -30,11 +30,12 @@ jobs:
           chmod +x skills/synapse/scripts/synapse.zsh
           ./skills/synapse/scripts/synapse.zsh --setup
 
-      - name: Verify Setup Symlinks
+      - name: Verify Setup Overrides
         run: |
-          [ -L "$HOME/.gitconfig" ] && echo "✅ Git symlink OK"
-          [ -L "$HOME/.tmux.conf" ] && echo "✅ Tmux symlink OK"
-          [ -L "$HOME/.config/nvim" ] && echo "✅ Neovim directory symlink OK"
+          # Ensure they are regular files/dirs, not symlinks
+          [ -f "$HOME/.gitconfig" ] && [ ! -L "$HOME/.gitconfig" ] && echo "✅ Git override OK"
+          [ -f "$HOME/.tmux.conf" ] && [ ! -L "$HOME/.tmux.conf" ] && echo "✅ Tmux override OK"
+          [ -d "$HOME/.config/nvim" ] && [ ! -L "$HOME/.config/nvim" ] && echo "✅ Neovim directory override OK"
           [ -f "$HOME/.config/nvim/init.lua" ] && echo "✅ init.lua exists OK"
 
       - name: Headless Neovim Check
@@ -48,12 +49,12 @@ jobs:
 
       - name: Verify Restoration
         run: |
-          # 1. Ensure symlinks are gone
-          [ ! -L "$HOME/.gitconfig" ] || (echo "❌ Git symlink still exists" && exit 1)
-          [ ! -L "$HOME/.tmux.conf" ] || (echo "❌ Tmux symlink still exists" && exit 1)
-          [ ! -L "$HOME/.config/nvim" ] || (echo "❌ Neovim directory symlink still exists" && exit 1)
-
-          # 2. Ensure dummy content is back
+          # 1. Ensure dummy content is back
           grep -q "DUMMY_GIT" "$HOME/.gitconfig" && echo "✅ Git restored OK"
           grep -q "DUMMY_TMUX" "$HOME/.tmux.conf" && echo "✅ Tmux restored OK"
           grep -q "DUMMY_NVIM" "$HOME/.config/nvim/init.lua" && echo "✅ Neovim restored OK"
+
+          # 2. Ensure they are not symlinks
+          [ ! -L "$HOME/.gitconfig" ] && echo "✅ Git is not a symlink OK"
+          [ ! -L "$HOME/.tmux.conf" ] && echo "✅ Tmux is not a symlink OK"
+          [ ! -L "$HOME/.config/nvim" ] && echo "✅ Neovim is not a symlink OK"

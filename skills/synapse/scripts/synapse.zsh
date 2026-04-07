@@ -6,7 +6,7 @@ set -e
 
 # Find the project root
 SCRIPT_DIR="${0:A:h}"
-PROJECT_ROOT=$(cd "$SCRIPT_DIR/../../.." && pwd)
+PROJECT_ROOT=$(cd "$SCRIPT_DIR/../.." && pwd)
 DOT_DIR="$PROJECT_ROOT/dot"
 BACKUP_DIR_BASE="$HOME/.synapse_backup"
 
@@ -21,7 +21,7 @@ setup() {
     local timestamp=$(date +%Y%m%d_%H%M%S)
     local backup_dir="${BACKUP_DIR_BASE}_${timestamp}"
 
-    echo "🚀 Starting Synapse setup..."
+    echo "🚀 Starting Synapse setup (Override Mode)..."
     echo "📂 Project root detected: $PROJECT_ROOT"
 
     if [[ ! -d "$DOT_DIR" ]]; then
@@ -29,36 +29,43 @@ setup() {
         exit 1
     fi
 
-    link_file() {
+    deploy_item() {
         local src=$1
         local dest=$2
         local dest_dir=$(dirname "$dest")
 
-        if [[ -e "$dest" && ! -L "$dest" ]]; then
-            echo "📦 Backing up existing file: $dest"
-            mkdir -p "$backup_dir"
-            mv "$dest" "$backup_dir/"
+        # Backup logic: Only backup if it's a real file/dir and NOT a symlink.
+        # To avoid backing up Synapse's own overrides repeatedly, we could check 
+        # but for now we follow the "override" instruction strictly.
+        if [[ -e "$dest" ]]; then
+            if [[ -L "$dest" ]]; then
+                echo "🗑️ Removing existing symlink: $dest"
+                rm "$dest"
+            else
+                echo "📦 Backing up existing item: $dest"
+                mkdir -p "$backup_dir"
+                mv "$dest" "$backup_dir/"
+            fi
         fi
 
         mkdir -p "$dest_dir"
-        echo "🔗 Symlinking $src -> $dest"
-        ln -sf "$src" "$dest"
+        echo "📥 Overriding $dest with $src"
+        cp -rf "$src" "$dest"
     }
 
-    # 1. Symlink Dotfiles from the dot/ directory
-    # We iterate over all top-level entries in DOT_DIR (including hidden ones)
+    # 1. Deploy Dotfiles from the dot/ directory
     # Using (N) qualifier for nullglob in zsh
     for item in "$DOT_DIR"/.[!.]*(N) "$DOT_DIR"/*(N); do
         local base_item=$(basename "$item")
         
-        # We want to link the contents of .config/ specifically to ~/.config/
+        # We want to deploy the contents of .config/ specifically to ~/.config/
         if [[ "$base_item" == ".config" ]]; then
             for subitem in "$item"/*(N); do
                 local base_subitem=$(basename "$subitem")
-                link_file "$subitem" "$HOME/.config/$base_subitem"
+                deploy_item "$subitem" "$HOME/.config/$base_subitem"
             done
         else
-            link_file "$item" "$HOME/$base_item"
+            deploy_item "$item" "$HOME/$base_item"
         fi
     done
 
