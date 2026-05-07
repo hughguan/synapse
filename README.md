@@ -41,6 +41,18 @@ Synapse is more than just a collection of dotfiles; it is the orchestrator for a
 
 ## External Dependencies
 
+### Tmux & Plugins
+* install plugin
+```zsh
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
+Reload your config: While inside a tmux session, run:
+```zsh
+tmux source ~/.tmux.conf
+```
+Trigger the install: Press your tmux prefix (usually Ctrl+b) followed by I (capital I for Install).
+Wait: You will see a terminal message indicating that the plugins are being installed. Once finished, press Enter to dismiss the message.
+
 ### Neovim & Plugins
 * **Neovim**: Install the latest 'stable' version.
 * **Basic utils**: `git`, `make`, `unzip`, C Compiler (`gcc`)
