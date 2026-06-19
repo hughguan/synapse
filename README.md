@@ -41,6 +41,11 @@ Synapse is more than just a collection of dotfiles; it is the orchestrator for a
 
 ## External Dependencies
 
+### iterm2
+```
+brew install --cask iterm2
+```
+
 ### AI agent install
 ```zsh
 curl -fsSL https://pi.dev/install.sh | sh
@@ -73,7 +78,6 @@ Wait: You will see a terminal message indicating that the plugins are being inst
 * **Tree-sitter**: `tree-sitter CLI`
 * **Clipboard**: `xclip`/`xsel` (Linux), `pbcopy` (macOS), or `win32yank` (Windows/WSL)
 * **A Nerd Font**: Optional, provides various icons. If you have it, set `vim.g.have_nerd_font` in `init.lua` to `true`.
-* **Emoji fonts**: (Ubuntu only) `sudo apt install fonts-noto-color-emoji`
 
 ### Language Setup
 * **TypeScript/JS**: `npm` / `node`
@@ -84,5 +88,17 @@ Wait: You will see a terminal message indicating that the plugins are being inst
 ```zsh
 brew tap homebrew/cask-fonts
 brew install --cask font-jetbrains-mono-nerd-font
+```
+
+### VPN 
+```zsh
+brew install --cask clash-verge-rev
+```
+
+### Whisper-input
+```
+git clone https://github.com/AlexFlanker/whisper-input-next-mac-kit.git
+cd whisper-input-next-mac-kit
+./install.sh
 ```
 
