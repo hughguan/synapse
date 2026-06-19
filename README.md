@@ -50,6 +50,10 @@ curl -fsSL https://pi.dev/install.sh | sh
 export GEMINI_API_KEY=xxx
 etc.
 
+### SSH credentials
+mv id_ed25519* ~/.ssh/
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+
 ### Tmux & Plugins
 * install plugin
 ```zsh
