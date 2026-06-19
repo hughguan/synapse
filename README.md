@@ -41,6 +41,15 @@ Synapse is more than just a collection of dotfiles; it is the orchestrator for a
 
 ## External Dependencies
 
+### AI agent install
+```zsh
+curl -fsSL https://pi.dev/install.sh | sh
+```
+
+### API KEY export
+export GEMINI_API_KEY=xxx
+etc.
+
 ### Tmux & Plugins
 * install plugin
 ```zsh
@@ -66,3 +75,10 @@ Wait: You will see a terminal message indicating that the plugins are being inst
 * **TypeScript/JS**: `npm` / `node`
 * **Golang**: `go`
 * **Rust**: `rustup` / `cargo`
+
+### Font install
+```zsh
+brew tap homebrew/cask-fonts
+brew install --cask font-jetbrains-mono-nerd-font
+```
+
