@@ -32,10 +32,15 @@ setup() {
     deploy_item() {
         local src=$1
         local dest=$2
+        local backup_subdir=${3:-}  # optional: back up under $backup_dir/$backup_subdir/
         local dest_dir=$(dirname "$dest")
+        local backup_target="$backup_dir"
+        if [[ -n "$backup_subdir" ]]; then
+            backup_target="$backup_dir/$backup_subdir"
+        fi
 
         # Backup logic: Only backup if it's a real file/dir and NOT a symlink.
-        # To avoid backing up Synapse's own overrides repeatedly, we could check 
+        # To avoid backing up Synapse's own overrides repeatedly, we could check
         # but for now we follow the "override" instruction strictly.
         if [[ -e "$dest" ]]; then
             if [[ -L "$dest" ]]; then
@@ -43,8 +48,8 @@ setup() {
                 rm "$dest"
             else
                 echo "📦 Backing up existing item: $dest"
-                mkdir -p "$backup_dir"
-                mv "$dest" "$backup_dir/"
+                mkdir -p "$backup_target"
+                mv "$dest" "$backup_target/"
             fi
         fi
 
@@ -62,7 +67,20 @@ setup() {
         if [[ "$base_item" == ".config" ]]; then
             for subitem in "$item"/*(N); do
                 local base_subitem=$(basename "$subitem")
-                deploy_item "$subitem" "$HOME/.config/$base_subitem"
+
+                # herdr keeps runtime state (sockets, session.json, logs) inside
+                # ~/.config/herdr/, so deploy its config file-by-file instead of
+                # replacing the whole directory (which would orphan a running
+                # server and move session history into the backup). Backups land
+                # under $backup_dir/herdr/ so remove() can restore them in place.
+                if [[ "$base_subitem" == "herdr" ]]; then
+                    for cfgfile in "$subitem"/*(N); do
+                        local fname=$(basename "$cfgfile")
+                        deploy_item "$cfgfile" "$HOME/.config/herdr/$fname" "herdr"
+                    done
+                else
+                    deploy_item "$subitem" "$HOME/.config/$base_subitem"
+                fi
             done
         else
             deploy_item "$item" "$HOME/$base_item"
@@ -107,10 +125,17 @@ remove() {
     # Restore everything found in the backup directory
     for item in "$latest_backup"/.[!.]*(N) "$latest_backup"/*(N); do
         local base_item=$(basename "$item")
-        
+
         # Special handling for .config contents
         if [[ "$base_item" == "nvim" ]]; then
              restore_item "$item" "$HOME/.config/nvim"
+        elif [[ "$base_item" == "herdr" ]]; then
+             # herdr config was deployed file-by-file; restore each backed-up
+             # file into ~/.config/herdr/ (runtime state was left in place).
+             mkdir -p "$HOME/.config/herdr"
+             for cfgfile in "$item"/*(N); do
+                 restore_item "$cfgfile" "$HOME/.config/herdr/$(basename "$cfgfile")"
+             done
         else
              restore_item "$item" "$HOME/$base_item"
         fi

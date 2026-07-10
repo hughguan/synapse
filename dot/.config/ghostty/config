@@ -1,0 +1,28 @@
+# Ghostty config - tuned for herdr (TUI agent multiplexer)
+# Docs: https://ghostty.org/docs/config  •  Validate: ghostty +show-config
+
+# Match herdr's catppuccin (Mocha/dark) theme so there's no color flash
+# when launching or quitting herdr. A single value pins it (no macOS
+# light/dark auto-switch), matching herdr's theme.auto_switch=false.
+theme = catppuccin-mocha
+
+# Let Option work as Alt on macOS. herdr's Alt-based bindings (and shell
+# alt shortcuts) need this; without it Option sends macOS special chars.
+macos-option-as-alt = true
+
+# --- Optional niceties (uncomment to enable) ---
+
+# A Nerd Font gives crisp box-drawing + icons in herdr's pane borders and
+# sidebar. Install one, e.g.:
+#   brew install --cask font-jetbrains-mono-nerd-font
+# then set it here:
+# font-family = JetBrainsMono Nerd Font
+
+# herdr paints its own catppuccin background. Keep opacity at 1.0 (default)
+# so the theme renders correctly; lower only for a translucent window:
+# background-opacity = 0.95
+
+# Want image rendering inside herdr (remote image paste, agent images)?
+# Ghostty supports the Kitty graphics protocol out of the box - just enable
+# it on the herdr side: add  kitty_graphics = true  under [experimental]
+# in ~/.config/herdr/config.toml. No Ghostty setting needed.

@@ -1,0 +1,54 @@
+# herdr configuration - migrated from ~/.tmux.conf
+# Full defaults: `herdr --default-config`. Only overrides are listed here.
+# Reload after edits: `herdr server reload-config` (or prefix+r once set below).
+
+# ── Theme ───────────────────────────────────────────────────────────────
+# Catppuccin (Mocha / dark). auto_switch=false pins it and DISABLES the
+# host light/dark appearance switching - no catppuccin-latte takeover.
+[theme]
+name = "catppuccin"
+auto_switch = false
+
+# ── Terminal ────────────────────────────────────────────────────────────
+# New panes/tabs/workspaces inherit the current pane's cwd
+# (matches tmux `-c "#{pane_current_path}"` on splits).
+[terminal]
+new_cwd = "follow"
+
+# ── Keys ───────────────────────────────────────────────────────────────
+# Prefix = Ctrl+x  (tmux: `set -g prefix C-x`).
+[keys]
+prefix = "ctrl+x"
+
+# Prefix+r reloads config  (tmux: `bind r source-file ~/.tmux.conf`).
+reload_config = "prefix+r"
+
+# Pane splits (tmux muscle memory). Each action takes a LIST so both keys work:
+#   split_vertical    prefix+|  and  prefix+\   (vertical divider, side-by-side)
+#   split_horizontal  prefix+-  and  prefix+_   (horizontal divider, stacked)
+split_vertical = ["prefix+|", "prefix+\\"]
+split_horizontal = ["prefix+-", "prefix+_"]
+#
+# Pane focus - bare Ctrl+h/j/k/l (tmux vim-tmux-navigator style).
+# DIRECT bindings (no prefix), matching your tmux habit.
+# Tradeoff (accepted): herdr grabs Ctrl+hjkl everywhere, so vim split nav
+# (use Ctrl+w hjkl) and shell Ctrl+L (use `clear`) / Ctrl+K are overridden.
+focus_pane_left = "ctrl+h"
+focus_pane_down = "ctrl+j"
+focus_pane_up = "ctrl+k"
+focus_pane_right = "ctrl+l"
+
+# ── UI ──────────────────────────────────────────────────────────────────
+# Mouse: click panes, drag dividers, scroll.  (tmux: `set -g mouse on`.)
+[ui]
+mouse_capture = true
+
+# ── Session persistence ─────────────────────────────────────────────────
+# herdr is a persistent background server, so sessions survive client
+# detach natively (no tmux-resurrect/continuum needed). These two add
+# cross-restart pane history + AI-agent session restore.
+[session]
+resume_agents_on_restore = true
+
+[experimental]
+pane_history = true
